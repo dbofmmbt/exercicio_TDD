@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 class ProcessadorBoletosTeste {
@@ -20,14 +21,30 @@ class ProcessadorBoletosTeste {
     }
 
     @Test
-    void fluxoNormal() {
+    void faturaPaga() {
         val fatura = new Fatura("Eduardo", LocalDateTime.now(), 100.0);
 
         val valores = new double[]{10.0, 60.0, 30.0};
-        val boletos = Arrays.stream(valores).mapToObj(v -> new Boleto(v, LocalDateTime.now(), Double.toString(v))).collect(Collectors.toList());
+        val boletos = getBoletos(valores);
 
         String resultado = processador.avaliaPagamentos(fatura, boletos);
 
         Assertions.assertEquals("PAGO", resultado);
+    }
+
+    @Test
+    void faturaNaoPaga() {
+        val fatura = new Fatura("Eduardo", LocalDateTime.now(), 100.0);
+
+        val valores = new double[]{10.0};
+        val boletos = getBoletos(valores);
+
+        String resultado = processador.avaliaPagamentos(fatura, boletos);
+
+        Assertions.assertEquals("NAO_PAGO", resultado);
+    }
+
+    private List<Boleto> getBoletos(double[] valores) {
+        return Arrays.stream(valores).mapToObj(v -> new Boleto(v, LocalDateTime.now(), Double.toString(v))).collect(Collectors.toList());
     }
 }
