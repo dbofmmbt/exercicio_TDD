@@ -42,6 +42,22 @@ class ProcessadorBoletosTest {
         Assertions.assertEquals("NAO_PAGO", resultado);
     }
 
+    @Test
+    void tabelaDeTestes() {
+        val tabela = new Object[][]{
+                {1500.0, new double[]{500.0, 400.0, 600.0}, "PAGO"},
+                {1500.0, new double[]{1000.0, 500.0, 250.0}, "PAGO"},
+                {2000.0, new double[]{500.0, 400.0}, "NAO_PAGO"}
+        };
+
+        for (Object[] entrada : tabela) {
+            faturaExemplo.setValorTotal((Double) entrada[0]);
+            val boletos = getBoletos((double[]) entrada[1]);
+
+            Assertions.assertEquals(entrada[2], processador.avaliaPagamentos(faturaExemplo, boletos));
+        }
+    }
+
     private List<Boleto> getBoletos(double[] valores) {
         return Arrays.stream(valores).mapToObj(v -> new Boleto(v, LocalDateTime.now(), Double.toString(v))).collect(Collectors.toList());
     }
