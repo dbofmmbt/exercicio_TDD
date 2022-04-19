@@ -12,34 +12,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class ProcessadorBoletosTeste {
+class ProcessadorBoletosTest {
     private ProcessadorBoletos processador;
+    private Fatura faturaExemplo;
 
     @BeforeEach
     void setUp() {
         processador = new ProcessadorBoletos();
+        faturaExemplo = new Fatura("Eduardo", LocalDateTime.now(), 100.0);
     }
 
     @Test
     void faturaPaga() {
-        val fatura = new Fatura("Eduardo", LocalDateTime.now(), 100.0);
-
         val valores = new double[]{10.0, 60.0, 30.0};
         val boletos = getBoletos(valores);
 
-        String resultado = processador.avaliaPagamentos(fatura, boletos);
+        String resultado = processador.avaliaPagamentos(faturaExemplo, boletos);
 
         Assertions.assertEquals("PAGO", resultado);
     }
 
     @Test
     void faturaNaoPaga() {
-        val fatura = new Fatura("Eduardo", LocalDateTime.now(), 100.0);
-
         val valores = new double[]{10.0};
         val boletos = getBoletos(valores);
 
-        String resultado = processador.avaliaPagamentos(fatura, boletos);
+        String resultado = processador.avaliaPagamentos(faturaExemplo, boletos);
 
         Assertions.assertEquals("NAO_PAGO", resultado);
     }
